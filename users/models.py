@@ -1,8 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
-
-
+import requests
+from django.conf import settings
+import http.client
+import mimetypes
+from codecs import encode
 # Extending User Model Using a One-To-One Link
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -16,7 +19,7 @@ class Profile(models.Model):
     # resizing images
     def save(self, *args, **kwargs):
         super().save()
-        print('Image caled hereeee')
+        
         img = Image.open(self.avatar.path)
 
         if img.height > 100 or img.width > 100:
