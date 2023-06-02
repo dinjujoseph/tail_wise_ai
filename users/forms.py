@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-from .models import Profile
+from .models import Profile,UploadedImage
 
 
 class RegisterForm(UserCreationForm):
@@ -77,6 +77,12 @@ class UpdateUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email']
+class ImageUploadForm(forms.ModelForm):
+    class Meta: 
+        model = UploadedImage 
+        # image = model.ImageField(upload_to='uploads/')
+   
+        fields = ['image','name','age','user_id'] 
 
 
 class UpdateProfileForm(forms.ModelForm):

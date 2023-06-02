@@ -6,9 +6,15 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
 
-from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm
+from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,ImageUploadForm
 
-
+def upload_image(request):
+    if request.method == 'POST':
+        image = request.FILES['image']
+        uploaded_image = UploadedImage.objects.create(image=image)
+        # You can perform additional operations with the uploaded image
+        return render(request, 'success.html')
+    return render(request, 'upload.html')
 def home(request):
     return render(request, 'users/home.html')
 
@@ -91,7 +97,32 @@ def profile(request):
             messages.success(request, 'Your profile is updated successfully')           
             return redirect(to='users-profile')
     else:
+        
         user_form = UpdateUserForm(instance=request.user)
         profile_form = UpdateProfileForm(instance=request.user.profile)
 
     return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+
+
+
+@login_required
+def dog_profile(request):
+    if request.method == 'POST':
+        print(request.POST)
+        form = ImageUploadForm(request.POST, request.FILES)
+
+        print(form.is_valid())
+        if form.is_valid():
+            form.save()
+            # return HttpResponseRedirect(reverse_lazy('home', kwargs={'pk': pk}))
+        messages.success(request, 'Your Image is updated successfully')           
+
+        # context = self.get_context_data(form=form)
+        # return self.render_to_response(context)     
+        return redirect(to='dog-profile')
+    else:
+        
+        images= ImageUploadForm(instance=request.user)
+        # profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    return render(request, 'users/dog_profile.html', {'images': images})

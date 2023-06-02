@@ -11,6 +11,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
+
     bio = models.TextField()
 
     def __str__(self):
@@ -26,3 +27,14 @@ class Profile(models.Model):
             new_img = (400, 400)
             img.thumbnail(new_img)
             img.save(self.avatar.path)
+
+
+class UploadedImage(models.Model):
+    # id=models.AutoField()
+    # print('Image uploading')
+    image = models.ImageField(default='default.jpg', upload_to='profile_images')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    name=models.TextField(default='Dog_name',blank=True, null=True)
+    breed=models.TextField(default='Dog_Breed',blank=True, null=True)
+    age=models.IntegerField(default=0,blank=True, null=True)
