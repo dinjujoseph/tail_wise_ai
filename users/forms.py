@@ -81,8 +81,8 @@ class ImageUploadForm(forms.ModelForm):
     class Meta: 
         model = UploadedImage 
         # image = model.ImageField(upload_to='uploads/')
-   
-        fields = ['image','name','age','user_id'] 
+        exclude = ['user']
+        fields = ['image','name','age'] 
 
 
 class UpdateProfileForm(forms.ModelForm):

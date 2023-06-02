@@ -113,7 +113,10 @@ def dog_profile(request):
 
         print(form.is_valid())
         if form.is_valid():
-            form.save()
+            # form.save()
+            portfolio = form.save(commit=False)
+            portfolio.user = request.user  # The logged-in user
+            portfolio.save()
             # return HttpResponseRedirect(reverse_lazy('home', kwargs={'pk': pk}))
         messages.success(request, 'Your Image is updated successfully')           
 

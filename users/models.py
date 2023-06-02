@@ -34,7 +34,7 @@ class UploadedImage(models.Model):
     # print('Image uploading')
     image = models.ImageField(default='default.jpg', upload_to='profile_images')
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user= models.ForeignKey(User, on_delete=models.CASCADE)
     name=models.TextField(default='Dog_name',blank=True, null=True)
     breed=models.TextField(default='Dog_Breed',blank=True, null=True)
     age=models.IntegerField(default=0,blank=True, null=True)
