@@ -5,9 +5,10 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
-
+from .detector import classify_dog_breed #Do breed detector
 from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,ImageUploadForm
-
+from django.conf import settings
+from .models import UploadedImage
 def upload_image(request):
     if request.method == 'POST':
         image = request.FILES['image']
@@ -108,15 +109,37 @@ def profile(request):
 @login_required
 def dog_profile(request):
     if request.method == 'POST':
-        print(request.POST)
+        # print(request.POST)
         form = ImageUploadForm(request.POST, request.FILES)
 
-        print(form.is_valid())
+        # print(form.is_valid())
         if form.is_valid():
+            # print(form)
             # form.save()
             portfolio = form.save(commit=False)
+            # print(request.FILES)
             portfolio.user = request.user  # The logged-in user
+            
+            # print(portfolio.id)
+            # print(portfolio.image)
             portfolio.save()
+            # print(settings.MEDIA_ROOT+str(portfolio.image))
+            image_path_temp=settings.MEDIA_ROOT+'/'+str(portfolio.image)
+            print(image_path_temp)
+            # print(classify_dog_breed(image_path_temp))
+            breed_detected=classify_dog_breed(image_path_temp)
+            t = UploadedImage.objects.get(id=portfolio.id)
+            t.breed = breed_detected  # change field
+            t.save() # this will update only
+            # if breed_detected:
+            #     portfolio.breed=breed_detected
+            # else:
+            #     portfolio.breed='Unable_to_detect'    
+
+            
+            
+            # verification = ImageUploadForm.objects.get(id=portfolio.id)
+            # print(verification)
             # return HttpResponseRedirect(reverse_lazy('home', kwargs={'pk': pk}))
         messages.success(request, 'Your Image is updated successfully')           
 
