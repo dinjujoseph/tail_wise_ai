@@ -38,3 +38,4 @@ class UploadedImage(models.Model):
     name=models.TextField(default='Dog_name',blank=True, null=True)
     breed=models.TextField(default='Dog_Breed',blank=True, null=True)
     age=models.IntegerField(default=0,blank=True, null=True)
+    status=models.IntegerField(default=0,blank=True, null=True)

@@ -9,6 +9,8 @@ from .detector import classify_dog_breed #Do breed detector
 from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,ImageUploadForm
 from django.conf import settings
 from .models import UploadedImage
+from django.http import JsonResponse
+
 def upload_image(request):
     if request.method == 'POST':
         image = request.FILES['image']
@@ -105,50 +107,152 @@ def profile(request):
     return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
+@login_required
+def dog_profile_edit(request):
+    if request.method == 'POST':
+        profile_id=request.POST.get("profile_id", "")
+        profile_id_edit=UploadedImage.objects.all().filter(id=profile_id)
+        profile_name=''
+        profile_id=''
+        profile_age=''
+        data={}
+        for item in profile_id_edit:
+
+            print(item.id)
+            print(item.name)
+            print(item.age)
+            data['profile_name']=item.name
+            data['profile_age']=item.age
+            data['profile_id']=item.id
+
+            # exit('asdasds')
+        return JsonResponse(data)    
+        # return render(request, 'users/dog_profile.html', {'name': profile_name,'age':profile_age,'id':profile_id})
+        # return {'name':images.name}
+        # print(images)
+
+@login_required
+def delete_dog_profile(request):
+    data={}
+    data['deleted']=False
+    if request.method == 'POST':
+        profile_id=request.POST.get("profile_id", "")
+        if profile_id:
+            UploadedImage.objects.filter(id=profile_id).delete()
+            data['deleted']=True
+            
+
+    return JsonResponse(data)        
+
+
+
 
 @login_required
 def dog_profile(request):
     if request.method == 'POST':
+        profile_id=request.POST.get("edit_id", "")
+        if profile_id:
+            if request.FILES:
+                old_image = UploadedImage.objects.get(id=profile_id)
+                form = ImageUploadForm(request.POST, request.FILES, instance=old_image)
+                if form.is_valid():
+                    # form.save()
+                    portfolio = form.save(commit=False)
+                    portfolio.save()
+                    image_path_temp=settings.MEDIA_ROOT+'/'+str(portfolio.image)
+                    print(image_path_temp)
+
+
+                # print(classify_dog_breed(image_path_temp))
+                    breed_detected=classify_dog_breed(image_path_temp)
+                    if breed_detected:
+                        breed_detected=breed_detected.replace('_',' ')
+                        breed_detected=breed_detected.title()
+                        t = UploadedImage.objects.get(id=portfolio.id)
+                        t.name=request.POST.get("name", "")
+                        t.age=request.POST.get("age", "")
+                        t.breed = breed_detected  # change field
+
+                        t.save() # this will update only
+                    else:
+                        #No breed detected
+                        t = UploadedImage.objects.get(id=portfolio.id)
+                        t.name=request.POST.get("name", "")
+                        t.age=request.POST.get("age", "")
+                        t.breed = 'Unknown'  # change field
+                        t.save() # this will update onl
+
+                    # image_path = old_image.image_document.path
+                    # if os.path.exists(image_path):
+                    #     os.remove(image_path)
+
+            else:
+                print('File not foun')    
+           
+
+            # print(request.POST.get("name", ""))
+                t = UploadedImage.objects.get(id=profile_id)
+                t.name=request.POST.get("name", "")
+                t.age=request.POST.get("age", "")
+            # t.image=request.POST.get("image", "")
+                t.save()
+            messages.success(request, 'Your Data is updated successfully')
+            return redirect(to='dog-profile')
+
+
+
+        else:    
         # print(request.POST)
-        form = ImageUploadForm(request.POST, request.FILES)
+            form = ImageUploadForm(request.POST, request.FILES)
+            # messages.info(request, "Detecting Dog Breed please hold on....")
+            # print(form.is_valid())
+            if form.is_valid():
+                # print(form)
+                # form.save()
+                portfolio = form.save(commit=False)
+                # print(request.FILES)
+                portfolio.user = request.user  # The logged-in user
+                
+                # print(portfolio.id)
+                # print(portfolio.image)
+                portfolio.save()
+                # print(settings.MEDIA_ROOT+str(portfolio.image))
+                image_path_temp=settings.MEDIA_ROOT+'/'+str(portfolio.image)
+                print(image_path_temp)
+                # print(classify_dog_breed(image_path_temp))
+                breed_detected=classify_dog_breed(image_path_temp)
+                if breed_detected:
+                    breed_detected=breed_detected.replace('_',' ')
+                    breed_detected=breed_detected.title()
+                    t = UploadedImage.objects.get(id=portfolio.id)
+                    t.breed = breed_detected  # change field
+                    t.save() # this will update only
+                else:
+                    #No breed detected
+                    t = UploadedImage.objects.get(id=portfolio.id)
+                    t.breed = 'Unknown'  # change field
+                    t.save() # this will update only
+                        
+                # if breed_detected:
+                #     portfolio.breed=breed_detected
+                # else:
+                #     portfolio.breed='Unable_to_detect'    
 
-        # print(form.is_valid())
-        if form.is_valid():
-            # print(form)
-            # form.save()
-            portfolio = form.save(commit=False)
-            # print(request.FILES)
-            portfolio.user = request.user  # The logged-in user
-            
-            # print(portfolio.id)
-            # print(portfolio.image)
-            portfolio.save()
-            # print(settings.MEDIA_ROOT+str(portfolio.image))
-            image_path_temp=settings.MEDIA_ROOT+'/'+str(portfolio.image)
-            print(image_path_temp)
-            # print(classify_dog_breed(image_path_temp))
-            breed_detected=classify_dog_breed(image_path_temp)
-            t = UploadedImage.objects.get(id=portfolio.id)
-            t.breed = breed_detected  # change field
-            t.save() # this will update only
-            # if breed_detected:
-            #     portfolio.breed=breed_detected
-            # else:
-            #     portfolio.breed='Unable_to_detect'    
+                
+                
+                # verification = ImageUploadForm.objects.get(id=portfolio.id)
+                # print(verification)
+                # return HttpResponseRedirect(reverse_lazy('home', kwargs={'pk': pk}))
+            messages.success(request, 'Your Image is updated successfully')           
 
-            
-            
-            # verification = ImageUploadForm.objects.get(id=portfolio.id)
-            # print(verification)
-            # return HttpResponseRedirect(reverse_lazy('home', kwargs={'pk': pk}))
-        messages.success(request, 'Your Image is updated successfully')           
-
-        # context = self.get_context_data(form=form)
-        # return self.render_to_response(context)     
-        return redirect(to='dog-profile')
+            # context = self.get_context_data(form=form)
+            # return self.render_to_response(context)     
+            return redirect(to='dog-profile')
     else:
-        
-        images= ImageUploadForm(instance=request.user)
+
+        images=UploadedImage.objects.all().filter(user_id=request.user.id).order_by('-uploaded_at')
+        # images= UploadedImage(instance=request.user)
+        # print(images)
         # profile_form = UpdateProfileForm(instance=request.user.profile)
 
     return render(request, 'users/dog_profile.html', {'images': images})
