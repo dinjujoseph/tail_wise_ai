@@ -334,8 +334,8 @@ $.ajax({
                                        </div>
                                        <div class="candidate-list-option">
                                           <ul class="list-unstyled">
-                                             <li><i class="fas fa-dog"></i>{{value.breed}}</li>
-                                             <li><i class="fas fa-paw"></i>{{value.age}}</li>
+                                             <li><i title="Breed"  class="fas fa-dog"></i>{{value.breed}}</li>
+                                             <li><i title="Age"  class="fas fa-paw"></i>{{value.age}}</li>
                                           </ul>
                                        </div>
                                     </div>
@@ -356,7 +356,7 @@ $.ajax({
                               </td>
                               <td>
                                  <ul class="list-unstyled mb-0 d-flex justify-content-end">
-                                    <li><a href="#" class="text-primary" data-toggle="tooltip" title data-original-title="view"><i class="far fa-eye"></i></a></li>
+                                    <li><a href="/watch_my_dog" class="text-primary" data-toggle="tooltip" title data-original-title="view"><i class="far fa-eye"></i></a></li>
                                     <li><a href="#" class="text-info" data-toggle="tooltip" title data-original-title="Edit"><i class="fas fa-pencil-alt edit_btn" data-id={{value.id}}></i></a></li>
                                     <li><a href="#" class="text-danger" data-toggle="tooltip" title data-original-title="Delete"><i class="far fa-trash-alt delete_this" data-id={{value.id}}></i></a></li>
                                  </ul>

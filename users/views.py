@@ -10,7 +10,7 @@ from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,Im
 from django.conf import settings
 from .models import UploadedImage
 from django.http import JsonResponse
-
+from django.core.mail import send_mail
 def upload_image(request):
     if request.method == 'POST':
         image = request.FILES['image']
@@ -47,6 +47,14 @@ class RegisterView(View):
 
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}')
+            #Sending welcome mail
+            email = form.cleaned_data.get('email')
+            send_mail(
+            "Welcome to Tail WISE AI",
+            "Here is the message.",
+            "mailtotailwise@gmail.com",
+            [email]            
+            )    
 
             return redirect(to='login')
 
@@ -144,7 +152,19 @@ def delete_dog_profile(request):
 
     return JsonResponse(data)        
 
+@login_required
+def watch_my_dog(request):
+    return render(request, 'users/watch_my_dog.html', {})
+    # data={}
+    # data['deleted']=False
+    # if request.method == 'POST':
+    #     profile_id=request.POST.get("profile_id", "")
+    #     if profile_id:
+    #         UploadedImage.objects.filter(id=profile_id).delete()
+    #         data['deleted']=True
+            
 
+    # return JsonResponse(data) 
 
 
 @login_required
@@ -201,7 +221,8 @@ def dog_profile(request):
 
 
 
-        else:    
+        else:
+            
         # print(request.POST)
             form = ImageUploadForm(request.POST, request.FILES)
             # messages.info(request, "Detecting Dog Breed please hold on....")
