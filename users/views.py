@@ -10,7 +10,7 @@ from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,Im
 from django.conf import settings
 from .models import UploadedImage
 from django.http import JsonResponse
-from django.core.mail import send_mail
+
 def upload_image(request):
     if request.method == 'POST':
         image = request.FILES['image']
@@ -44,17 +44,10 @@ class RegisterView(View):
 
         if form.is_valid():
             form.save()
+            
 
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}')
-            #Sending welcome mail
-            email = form.cleaned_data.get('email')
-            send_mail(
-            "Welcome to Tail WISE AI",
-            "Here is the message.",
-            "mailtotailwise@gmail.com",
-            [email]            
-            )    
 
             return redirect(to='login')
 
@@ -138,7 +131,24 @@ def dog_profile_edit(request):
         # return render(request, 'users/dog_profile.html', {'name': profile_name,'age':profile_age,'id':profile_id})
         # return {'name':images.name}
         # print(images)
+@login_required
+def get_dog_status(request):
+    data={}
+    
+    images=UploadedImage.objects.all().filter(user_id=request.user.id).order_by('-uploaded_at')
+    # count=
+    for i in images:
+        data[i.id]=i.status
 
+    # data['images']=images
+    # if request.method == 'POST':
+    #     profile_id=request.POST.get("profile_id", "")
+    #     if profile_id:
+    #         UploadedImage.objects.filter(id=profile_id).delete()
+    #         data['deleted']=True
+            
+
+    return JsonResponse(data) 
 @login_required
 def delete_dog_profile(request):
     data={}
@@ -221,8 +231,7 @@ def dog_profile(request):
 
 
 
-        else:
-            
+        else:    
         # print(request.POST)
             form = ImageUploadForm(request.POST, request.FILES)
             # messages.info(request, "Detecting Dog Breed please hold on....")

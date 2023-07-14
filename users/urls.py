@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, profile, RegisterView,dog_profile,dog_profile_edit,delete_dog_profile,watch_my_dog
+from .views import home, profile, RegisterView,dog_profile,dog_profile_edit,delete_dog_profile,watch_my_dog,get_dog_status
 
 urlpatterns = [
     path('', home, name='users-home'),
@@ -9,4 +9,5 @@ urlpatterns = [
     path('edit_dog_profile/', dog_profile_edit, name='dog-profile-edit'),
     path('delete_dog_profile/',delete_dog_profile,name='delete_dog_profile'),
     path('watch_my_dog/',watch_my_dog,name='watch_my_dog'),
+    path('get_dog_status',get_dog_status),
 ]

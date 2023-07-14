@@ -25,7 +25,7 @@
           <!--  -->
             
          
-        <!-- {%endfor%} -->g
+        <!-- {%endfor%} -->
         <!-- {%endif%} -->
      <label for="chooseimage">Choose image</label> <input type="file" class="form-control-file" id="image" name='image'>
       <label for="name">Dog Name</label><input type="test" class="form-control" id="name" name='name' aria-describedby="emailHelp" placeholder="Enter Dog Name">
@@ -341,7 +341,7 @@ $.ajax({
                                     </div>
                                  </div>
                               </td>
-                              <td class="candidate-list-favourite-time text-center">
+                              <td class="candidate-list-favourite-time text-center" id="{{value.id}}">
                                  
                                  {% if value.status == 0 %}
                                      <a title="The dog is active and roaming around" class="candidate-list-favourite order-2 text-success" href="#"><i class="fas fa-heart"></i></a>
@@ -376,5 +376,44 @@ $.ajax({
       
    </body>
 </html>
+<script type="text/javascript">
+   $(document).ready(function(){
+    setInterval(function() {
+        jQuery.ajax({
+            type: "GET",
+            url: "/get_dog_status",
+            dataType:"json",
+            success:function(response){
+               $.each(response, function(key,value) {
+set_dog_stats(key,value);
+}); 
+                // if (response) {
+                //     window.location.href = 'logout.php';
+                // }
+                // else {
+                //     // Process the expected results...
+                // }
+            }
 
+        });
+    }, 10000);
+});
+
+function set_dog_stats(id,status)
+{
+   if(status==0)
+   {
+      $('#'+id).html('<a title="The dog is active and roaming around" class="candidate-list-favourite order-2 text-success" href="#"><i class="fas fa-heart"></i></a><span class="candidate-list-time order-1">Healthy</span>')
+   }
+   if(status==1)
+   {
+      $('#'+id).html('<a title="The dog is sleeping" class="candidate-list-favourite order-2 text-secondary" href="#"><i class="fas fa-bed"></i></a><span class="candidate-list-time order-1">Sleeping</span>')
+   }
+   if(status==2)
+   {
+      $('#'+id).html('<a title="The dog might have hit something. !!!" class="candidate-list-favourite order-2 text-danger" href="#"><i class="fas fa-exclamation-circle"></i></a><span class="candidate-list-time order-1">Check health</span>')
+   }
+}
+
+</script>
 {% endblock content %}
