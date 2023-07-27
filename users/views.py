@@ -14,9 +14,9 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
 def send_welcome_email(email,fname,lname):
-    msg_plain = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'fname': fname})
-    msg_html = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'lname': lname})
-    send_mail( 'email title', msg_plain,'mailtotailwiseai@gmail.com',[email],html_message=msg_html,)
+    msg_plain = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'fname': fname,'lname':lname})
+    msg_html = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'lname': lname,'fname': fname})
+    send_mail( 'Welcome to Tail Wise AI', msg_plain,'mailtotailwiseai@gmail.com',[email],html_message=msg_html,)
 
 
 def upload_image(request):
@@ -58,7 +58,7 @@ class RegisterView(View):
             email=form.cleaned_data.get('email')
             fname=form.cleaned_data.get('first_name')
             lname=form.cleaned_data.get('last_name')
-            send_welcome_email(email,lname,fname)
+            send_welcome_email(email,fname,lname)
             messages.success(request, f'Account created for {username}')
 
             return redirect(to='login')
