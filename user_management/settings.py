@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dinjuvj.pythonanywhere.com']
 
 
 # Application definition
@@ -139,7 +139,9 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
+# STATICFILES_DIRS = [
+#         os.path.join(BASE_DIR, 'static')
+#     ]
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
@@ -177,6 +179,9 @@ DOG_API_KEY='live_X5qa9dWCHV7V4gk9O3PamI5XYy1owMUzhY69lddFscpQ8zNQnWEuLMlyTb6CQ6
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
+STATICFILES_DIRS = (
+    '/home/DinjuVJ/tail_wise_ai/static'
+    )

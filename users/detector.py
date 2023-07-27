@@ -12,7 +12,7 @@ import os.path
 from keras.models import load_model
 import keras.utils as image
 
-model = load_model('/home/dinju/works/project_dog/users/2023-07-18_dog_breed_model.h5')
+model = load_model('/home/DinjuVJ/tail_wise_ai/users/2023-07-18_dog_breed_model.h5')
 selected_breed_list = ['scottish_deerhound',
  'maltese_dog',
  'afghan_hound',

@@ -10,6 +10,14 @@ from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,Im
 from django.conf import settings
 from .models import UploadedImage
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
+def send_welcome_email(email,fname,lname):
+    msg_plain = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'fname': fname})
+    msg_html = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'lname': lname})
+    send_mail( 'email title', msg_plain,'mailtotailwiseai@gmail.com',[email],html_message=msg_html,)
+
 
 def upload_image(request):
     if request.method == 'POST':
@@ -44,9 +52,13 @@ class RegisterView(View):
 
         if form.is_valid():
             form.save()
-            
+
 
             username = form.cleaned_data.get('username')
+            email=form.cleaned_data.get('email')
+            fname=form.cleaned_data.get('first_name')
+            lname=form.cleaned_data.get('last_name')
+            send_welcome_email(email,lname,fname)
             messages.success(request, f'Account created for {username}')
 
             return redirect(to='login')
@@ -98,10 +110,10 @@ def profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Your profile is updated successfully')           
+            messages.success(request, 'Your profile is updated successfully')
             return redirect(to='users-profile')
     else:
-        
+
         user_form = UpdateUserForm(instance=request.user)
         profile_form = UpdateProfileForm(instance=request.user.profile)
 
@@ -127,14 +139,14 @@ def dog_profile_edit(request):
             data['profile_id']=item.id
 
             # exit('asdasds')
-        return JsonResponse(data)    
+        return JsonResponse(data)
         # return render(request, 'users/dog_profile.html', {'name': profile_name,'age':profile_age,'id':profile_id})
         # return {'name':images.name}
         # print(images)
 @login_required
 def get_dog_status(request):
     data={}
-    
+
     images=UploadedImage.objects.all().filter(user_id=request.user.id).order_by('-uploaded_at')
     # count=
     for i in images:
@@ -146,9 +158,9 @@ def get_dog_status(request):
     #     if profile_id:
     #         UploadedImage.objects.filter(id=profile_id).delete()
     #         data['deleted']=True
-            
 
-    return JsonResponse(data) 
+
+    return JsonResponse(data)
 @login_required
 def delete_dog_profile(request):
     data={}
@@ -158,9 +170,9 @@ def delete_dog_profile(request):
         if profile_id:
             UploadedImage.objects.filter(id=profile_id).delete()
             data['deleted']=True
-            
 
-    return JsonResponse(data)        
+
+    return JsonResponse(data)
 
 @login_required
 def watch_my_dog(request):
@@ -172,9 +184,9 @@ def watch_my_dog(request):
     #     if profile_id:
     #         UploadedImage.objects.filter(id=profile_id).delete()
     #         data['deleted']=True
-            
 
-    # return JsonResponse(data) 
+
+    # return JsonResponse(data)
 
 
 @login_required
@@ -217,8 +229,8 @@ def dog_profile(request):
                     #     os.remove(image_path)
 
             else:
-                print('File not foun')    
-           
+                print('File not foun')
+
 
             # print(request.POST.get("name", ""))
                 t = UploadedImage.objects.get(id=profile_id)
@@ -231,7 +243,7 @@ def dog_profile(request):
 
 
 
-        else:    
+        else:
         # print(request.POST)
             form = ImageUploadForm(request.POST, request.FILES)
             # messages.info(request, "Detecting Dog Breed please hold on....")
@@ -242,7 +254,7 @@ def dog_profile(request):
                 portfolio = form.save(commit=False)
                 # print(request.FILES)
                 portfolio.user = request.user  # The logged-in user
-                
+
                 # print(portfolio.id)
                 # print(portfolio.image)
                 portfolio.save()
@@ -262,21 +274,21 @@ def dog_profile(request):
                     t = UploadedImage.objects.get(id=portfolio.id)
                     t.breed = 'Unknown'  # change field
                     t.save() # this will update only
-                        
+
                 # if breed_detected:
                 #     portfolio.breed=breed_detected
                 # else:
-                #     portfolio.breed='Unable_to_detect'    
+                #     portfolio.breed='Unable_to_detect'
 
-                
-                
+
+
                 # verification = ImageUploadForm.objects.get(id=portfolio.id)
                 # print(verification)
                 # return HttpResponseRedirect(reverse_lazy('home', kwargs={'pk': pk}))
-            messages.success(request, 'Your Image is updated successfully')           
+            messages.success(request, 'Your Image is updated successfully')
 
             # context = self.get_context_data(form=form)
-            # return self.render_to_response(context)     
+            # return self.render_to_response(context)
             return redirect(to='dog-profile')
     else:
 
