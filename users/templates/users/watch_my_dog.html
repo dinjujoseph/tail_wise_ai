@@ -1,7 +1,8 @@
 {% extends "users/base.html" %}
 {% load static %}
-{% block title %}Dog Profile Page{% endblock title %}
+{% block title %}Tail Wise-AI{% endblock title %}
 {% block content %}
+
 <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.png' %}">
 {% if user_form.errors %}
 
@@ -16,25 +17,7 @@
    </button>
 </div>
 {% endif %}
-<div class="form-content" id='upload_form' style="display: none;margin-top: 10%;">
-   <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-       <!-- {{ form.as_p }}  -->
-       <!-- {%if images%} -->
-          <!-- {%for field in form%}    -->
-          <!--  -->
-            
-         
-        <!-- {%endfor%} -->g
-        <!-- {%endif%} -->
-     <label for="chooseimage">Choose image</label> <input type="file" class="form-control-file" id="image" name='image'>
-      <label for="name">Dog Name</label><input type="test" class="form-control" id="name" name='name' aria-describedby="emailHelp" placeholder="Enter Dog Name">
-      <label for="name">Dog Age</label><input type="number" class="form-control" id="age" name='age' aria-describedby="emailHelp" placeholder="Enter Dog Age">
-      
-      <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
-      <button type="reset" id='cancel_me' class="btn btn-dark btn-lg">Cancel</button>
-   </form>
-</div>
+
 <div class="form-content" id='upload_form_edit' style="display: none;margin-top: 10%;">
    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
@@ -42,8 +25,8 @@
        <!-- {%if images%} -->
           <!-- {%for field in form%}    -->
           <!--  -->
-            
-         
+
+
         <!-- {%endfor%} -->
         <!-- {%endif%} -->
      <label for="chooseimage">Choose image</label> <input type="file" class="form-control-file" id="image" name='image'>
@@ -64,15 +47,15 @@
 
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
       <!-- <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> -->
-      
+
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-      
+
       <script type="text/javascript"></script>
 <script type="text/javascript">
          $(document).on("click", ".edit_btn", function(e){
     // console.log($(this).data('id'));
     var profile_id=$(this).data('id');
-         
+
 $.ajax({
   method: "POST",
   url: "/edit_dog_profile/",
@@ -84,14 +67,14 @@ $.ajax({
    $("#edit_age").val(response.profile_age);
    $("#edit_id").val(response.profile_id);
    $('#upload_form_edit').toggle();
-   
-  });   
+
+  });
 
 });
 $(document).on("click", ".delete_this", function(e){
     console.log($(this).data('id'));
     var profile_id=$(this).data('id');
-         
+
 $.ajax({
   method: "POST",
   url: "/delete_dog_profile/",
@@ -105,8 +88,8 @@ $.ajax({
     location.reload();
     $('#alert_suceess').hide();
 }, 2000);
-  
-  });   
+
+  });
 
 });
 
@@ -118,9 +101,9 @@ $.ajax({
       //    console.log(profile_id);
       // }
        // $('#edit_btn').click(function() {
-           
+
        //  });
- 
+
         $('#toogle_button').click(function() {
             $('#upload_form').toggle(); // Toggle form visibility on button click
         });
@@ -144,7 +127,7 @@ $.ajax({
          }
          .shadow-sm {
          box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-         }    
+         }
          /* user-dashboard-info-box */
          .user-dashboard-info-box .candidates-list .thumb {
          margin-right: 20px;
@@ -295,85 +278,26 @@ $.ajax({
       </style>
    </head>
    <body>
-      
+
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
       <div id='alert_suceess' class="alert alert-success" role="alert" style="display:none;">
   This is a success alert—check it out!
 </div>
       <div class="text-center mt-3 mt-sm-3">
-                        <button id='toogle_button' style="float: right;" class="btn btn-dark btn-lg">Add New</button>
+                    {% if video_path %}
+				<div>
+					<video autoplay="autoplay" controls="controls" preload="preload">
+						<source src="{{ MEDIA_URL }}/media/{{ video_path }}" type="video/mp4"></source>
+					</video>
+				</div>
+			{% endif %}
                      </div>
                   </div>
 
-      <div class="container mt-3 mb-4">
-         <div class="col-lg-9 mt-4 mt-lg-0">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
-                     <table class="table manage-candidates-top mb-0">
-                        <thead>
-                           <tr>
-                              <th>Dog Name</th>
-                              <th class="text-center">Status</th>
-                              <th class="action text-right">Action</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                            {% for value in images %}
-      
-             
-                           <tr class="candidates-list">
-                              <td class="title">
-                                 <div class="thumb">
-                                    <img class="img-fluid" src="/media/{{ value.image }} " alt>
-                                 </div>
-                                 <div class="candidate-list-details">
-                                    <div class="candidate-list-info">
-                                       <div class="candidate-list-title">
-                                          <h5 class="mb-0"><a href="#">{{value.name}}</a></h5>
-                                       </div>
-                                       <div class="candidate-list-option">
-                                          <ul class="list-unstyled">
-                                             <li><i title="Breed"  class="fas fa-dog"></i>{{value.breed}}</li>
-                                             <li><i title="Age"  class="fas fa-paw"></i>{{value.age}}</li>
-                                          </ul>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </td>
-                              <td class="candidate-list-favourite-time text-center">
-                                 
-                                 {% if value.status == 0 %}
-                                     <a title="The dog is active and roaming around" class="candidate-list-favourite order-2 text-success" href="#"><i class="fas fa-heart"></i></a>
-                                     <span class="candidate-list-time order-1">Healthy</span>
-                                 {% elif value.status == 1 %}
-                                     <a title="The dog is sleeping" class="candidate-list-favourite order-2 text-secondary" href="#"><i class="fas fa-bed"></i></a>
-                                     <span class="candidate-list-time order-1">Sleeping</span>
-                                 {% elif value.status == 2 %}
-                                     <a title="The dog might have hit something. !!!" class="candidate-list-favourite order-2 text-danger" href="#"><i class="fas fa-exclamation-circle"></i></a>
-                                     <span class="candidate-list-time order-1">Check health</span>
-                                 {% endif %}
-                              </td>
-                              <td>
-                                 <ul class="list-unstyled mb-0 d-flex justify-content-end">
-                                    <li><a href="/watch_my_dog" class="text-primary" data-toggle="tooltip" title data-original-title="view"><i class="far fa-eye"></i></a></li>
-                                    <li><a href="#" class="text-info" data-toggle="tooltip" title data-original-title="Edit"><i class="fas fa-pencil-alt edit_btn" data-id={{value.id}}></i></a></li>
-                                    <li><a href="#" class="text-danger" data-toggle="tooltip" title data-original-title="Delete"><i class="far fa-trash-alt delete_this" data-id={{value.id}}></i></a></li>
-                                 </ul>
-                              </td>
-                           </tr>  
-                           {% endfor %}         
-                           
-                         
-                    
-                        </tbody>
-                     </table>
-                     
-               </div>
-            </div>
+
          </div>
       </div>
-      
+
    </body>
 </html>
 

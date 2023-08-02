@@ -1,10 +1,61 @@
 {% extends "users/base.html" %}
 {% load static %}
-{% block title %}Dog Profile Page{% endblock title %}
+{% block title %}Tail Wise-AI{% endblock title %}
 {% block content %}
-<link rel="icon" type="image/x-icon" href="{% static 'images/favicon.png' %}">
-{% if user_form.errors %}
 
+{% if user_form.errors %}
+<head>
+<link rel="icon" type="image/x-icon" href="{% static 'images/favicon.png' %}">
+<link href="data:image/x-icon;base64,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" rel="icon" type="image/x-icon" />
+</head>
 <div class="alert alert-danger alert-dismissible" role="alert">
    <div id="form_errors">
       {% for key, value in user_form.errors.items %}
@@ -16,6 +67,7 @@
    </button>
 </div>
 {% endif %}
+
 <div class="form-content" id='upload_form' style="display: none;margin-top: 10%;">
    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
@@ -47,7 +99,7 @@
         <!-- {%endfor%} -->
         <!-- {%endif%} -->
      <label for="chooseimage">Choose Video</label> <input type="file" class="form-control-file" id="video" name='video'>
-
+        <input type='hidden' name='video_file' value="video_file">
       <button type="submit" class="btn btn-dark btn-lg">Upload</button>
       <button type="reset" id='cancel_me_video' class="btn btn-dark btn-lg">Cancel</button>
    </form>
@@ -137,7 +189,10 @@ $.ajax({
        // $('#edit_btn').click(function() {
 
        //  });
-
+          $('#toogle_button_video_watch').click(function() {
+          console.log('Itsssss');
+          window.open('/watch_my_dog', "_blank");
+        });
         $('#toogle_button').click(function() {
             $('#upload_form').toggle(); // Toggle form visibility on button click
         });
@@ -327,6 +382,7 @@ $.ajax({
       <div class="text-center mt-3 mt-sm-3">
                         <button id='toogle_button' style="float: right;" class="btn btn-dark btn-lg">Add New Dog</button>
                         <button id="toogle_button_video" style="float: left;" class="btn btn-dark btn-lg">Add New Dog Video</button>
+                        <button id="toogle_button_video_watch"  style="float: left;" class="btn btn-dark btn-lg">Watch My Dog</button>
                      </div>
 
                   </div>
@@ -370,7 +426,7 @@ $.ajax({
 
                               <td>
                                  <ul class="list-unstyled mb-0 d-flex justify-content-end">
-                                    <li><a href="/watch_my_dog" class="text-primary" data-toggle="tooltip" title data-original-title="view"><i class="far fa-eye"></i></a></li>
+                                    <!--<li><a href="/watch_my_dog" class="text-primary" data-toggle="tooltip" title data-original-title="view"><i class="far fa-eye"></i></a></li>-->
                                     <li><a href="#" class="text-info" data-toggle="tooltip" title data-original-title="Edit"><i class="fas fa-pencil-alt edit_btn" data-id={{value.id}}></i></a></li>
                                     <li><a href="#" class="text-danger" data-toggle="tooltip" title data-original-title="Delete"><i class="far fa-trash-alt delete_this" data-id={{value.id}}></i></a></li>
                                  </ul>
@@ -392,25 +448,27 @@ $.ajax({
 </html>
 <script type="text/javascript">
    $(document).ready(function(){
-    setInterval(function() {
-        jQuery.ajax({
-            type: "GET",
-            url: "/get_dog_status",
-            dataType:"json",
-            success:function(response){
-               $.each(response, function(key,value) {
-set_dog_stats(key,value);
-});
-                // if (response) {
-                //     window.location.href = 'logout.php';
-                // }
-                // else {
-                //     // Process the expected results...
-                // }
-            }
 
-        });
-    }, 10000);
+
+//     setInterval(function() {
+//         jQuery.ajax({
+//             type: "GET",
+//             url: "/get_dog_status",
+//             dataType:"json",
+//             success:function(response){
+//               $.each(response, function(key,value) {
+// set_dog_stats(key,value);
+// });
+//                 // if (response) {
+//                 //     window.location.href = 'logout.php';
+//                 // }
+//                 // else {
+//                 //     // Process the expected results...
+//                 // }
+//             }
+
+//         });
+//     }, 10000);
 });
 
 function set_dog_stats(id,status)

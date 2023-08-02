@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-from .models import Profile,UploadedImage
+from .models import Profile,UploadedImage,UploadVideo
 
 
 class RegisterForm(UserCreationForm):
@@ -66,6 +66,11 @@ class LoginForm(AuthenticationForm):
         model = User
         fields = ['username', 'password', 'remember_me']
 
+class VideoUploadForm(forms.ModelForm):
+    class Meta:
+        model=UploadVideo
+        exclude = ['user']
+        fields = ['video']
 
 class UpdateUserForm(forms.ModelForm):
     username = forms.CharField(max_length=100,
@@ -78,11 +83,11 @@ class UpdateUserForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 class ImageUploadForm(forms.ModelForm):
-    class Meta: 
-        model = UploadedImage 
+    class Meta:
+        model = UploadedImage
         # image = model.ImageField(upload_to='uploads/')
         exclude = ['user']
-        fields = ['image','name','age'] 
+        fields = ['image','name','age']
 
 
 class UpdateProfileForm(forms.ModelForm):

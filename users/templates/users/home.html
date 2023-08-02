@@ -1,6 +1,6 @@
 {% extends "users/base.html" %}
 {% load static %}
-{% block title %} Home Page {% endblock title%}
+{% block title %} Tail Wise-AI {% endblock title%}
 {% block content %}
     <div class="jumbotron">
         <h1 class="display-4">Welcome, {{user.first_name.title|default:'Guest'}}</h1>
@@ -45,15 +45,15 @@
          {% endif %}
         </div>
     </div>
-    
-    
+
+
         <div class="right">
-        
-            
+
+
             <br><br>
-            
-     
-            
+
+
+
             <br>
                  {% if user.is_authenticated %}
                 <a class="btn btn-primary btn-lg" href="{% url 'logout' %}" role="button">Logout</a>
@@ -62,10 +62,10 @@
             {% endif %}
             <!-- <button>Login</button> -->
     </div>
-    
+
 </div>
 <!-- partial -->
-  
+
 </body>
 </html>
 {% endblock content %}

@@ -20,13 +20,19 @@ class Profile(models.Model):
     # resizing images
     def save(self, *args, **kwargs):
         super().save()
-        
+
         img = Image.open(self.avatar.path)
 
         if img.height > 100 or img.width > 100:
             new_img = (400, 400)
             img.thumbnail(new_img)
             img.save(self.avatar.path)
+
+class UploadVideo(models.Model):
+    video=models.FileField(upload_to='profile_images', max_length=254)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    others=models.TextField(default='Others',blank=True, null=True)
 
 
 class UploadedImage(models.Model):

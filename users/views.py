@@ -6,13 +6,13 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from .detector import classify_dog_breed #Do breed detector
-from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,ImageUploadForm
+from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,ImageUploadForm,VideoUploadForm
 from django.conf import settings
-from .models import UploadedImage
+from .models import UploadedImage,UploadVideo
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-
+import os.path
 def send_welcome_email(email,fname,lname):
     msg_plain = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'fname': fname,'lname':lname})
     msg_html = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'lname': lname,'fname': fname})
@@ -176,7 +176,12 @@ def delete_dog_profile(request):
 
 @login_required
 def watch_my_dog(request):
-    return render(request, 'users/watch_my_dog.html', {})
+    video_files=UploadVideo.objects.all().filter(user_id=request.user)
+    video_path=''
+    for i in video_files:
+        video_path=i.video
+
+    return render(request, 'users/watch_my_dog.html', {'video_path':video_path})
     # data={}
     # data['deleted']=False
     # if request.method == 'POST':
@@ -244,6 +249,34 @@ def dog_profile(request):
 
 
         else:
+            video_file=request.POST.get("video_file", "")
+            #Check for video file
+            if video_file:
+                video_files=UploadVideo.objects.all().filter(user_id=request.user)
+
+                for i in video_files:
+                    actual_path='/home/DinjuVJ/tail_wise_ai/media/'+str(i.video)
+                    #Deleting old files
+                    if os.path.isfile(actual_path):
+                        os.remove(actual_path)
+
+                UploadVideo.objects.filter(user_id=request.user).delete()
+                form = VideoUploadForm(request.POST, request.FILES)
+                if form.is_valid():
+                    portfolio = form.save(commit=False)
+                # print(request.FILES)
+                    portfolio.user = request.user  # The logged-in user
+
+                # print(portfolio.id)
+                # print(portfolio.image)
+                    portfolio.save()
+
+
+                messages.success(request, 'Your video is updated successfully')
+
+                return redirect(to='dog-profile')
+
+
         # print(request.POST)
             form = ImageUploadForm(request.POST, request.FILES)
             # messages.info(request, "Detecting Dog Breed please hold on....")
