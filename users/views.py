@@ -213,8 +213,12 @@ def dog_profile(request):
                 # print(classify_dog_breed(image_path_temp))
                     breed_detected=classify_dog_breed(image_path_temp)
                     if breed_detected:
+
                         breed_detected=breed_detected.replace('_',' ')
                         breed_detected=breed_detected.title()
+                        if breed_detected=='groenendael':
+                            breed_detected='Collie'
+
                         t = UploadedImage.objects.get(id=portfolio.id)
                         t.name=request.POST.get("name", "")
                         t.age=request.POST.get("age", "")
@@ -297,6 +301,8 @@ def dog_profile(request):
                 # print(classify_dog_breed(image_path_temp))
                 breed_detected=classify_dog_breed(image_path_temp)
                 if breed_detected:
+                    if breed_detected=='groenendael':
+                            breed_detected='Collie'
                     breed_detected=breed_detected.replace('_',' ')
                     breed_detected=breed_detected.title()
                     t = UploadedImage.objects.get(id=portfolio.id)

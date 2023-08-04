@@ -13,6 +13,7 @@ from keras.models import load_model
 import keras.utils as image
 
 model = load_model('/home/DinjuVJ/tail_wise_ai/users/2023-07-18_dog_breed_model.h5')
+#model = load_model('/home/DinjuVJ/tail_wise_ai/users/2023-08-04_dog_breed_model.h5')
 selected_breed_list = ['scottish_deerhound',
  'maltese_dog',
  'afghan_hound',
@@ -97,12 +98,12 @@ def predict_from_image(img_path):
     img_tensor = image.img_to_array(img)                    # (height, width, channels)
     img_tensor = np.expand_dims(img_tensor, axis=0)         # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
     img_tensor /= 255.                                      # imshow expects values in the range [0, 1]
-    
+
     pred = model.predict(img_tensor)
     sorted_breeds_list = sorted(selected_breed_list)
     predicted_class = sorted_breeds_list[np.argmax(pred)]
-    
-    # plt.imshow(img_tensor[0])                           
+
+    # plt.imshow(img_tensor[0])
     # plt.axis('off')
     # plt.show()
 
