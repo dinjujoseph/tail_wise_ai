@@ -9,15 +9,21 @@ from .detector import classify_dog_breed #Do breed detector
 from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm,ImageUploadForm,VideoUploadForm
 from django.conf import settings
 from .models import UploadedImage,UploadVideo
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 import os.path
+import os
+
 def send_welcome_email(email,fname,lname):
     msg_plain = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'fname': fname,'lname':lname})
     msg_html = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/welcome_email.html', {'lname': lname,'fname': fname})
     send_mail( 'Welcome to Tail Wise AI', msg_plain,'mailtotailwiseai@gmail.com',[email],html_message=msg_html,)
-
+def send_alert_email(email,fname,lname,obj):
+    msg_plain = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/alert_email.html', {'fname': fname,'lname':lname,'object':obj})
+    msg_html = render_to_string('/home/DinjuVJ/tail_wise_ai/users/templates/users/alert_email.html', {'lname': lname,'fname': fname,'object':obj})
+    send_mail( 'Tail Wise AI-Alert', msg_plain,'mailtotailwiseai@gmail.com',[email],html_message=msg_html,)
 
 def upload_image(request):
     if request.method == 'POST':
@@ -121,6 +127,27 @@ def profile(request):
 
 
 @login_required
+def send_mail_nofitication(request):
+    data={}
+    data['success']=True
+    if request.method == 'POST':
+        # user_details=Profile.objects.all().filter(user_id=request.user)
+        user_id1=request.user
+        user = User.objects.get(id=user_id1.id)
+        user_email = user.email
+        fname=user.first_name
+        lname=user.last_name
+        det_obj=request.POST.get("object_name", "")
+        send_alert_email(user_email,fname,lname,det_obj)
+        data['email']=user_email
+        data['id']=user_id1.id
+    return JsonResponse(data)
+
+
+
+
+
+@login_required
 def dog_profile_edit(request):
     if request.method == 'POST':
         profile_id=request.POST.get("profile_id", "")
@@ -178,10 +205,17 @@ def delete_dog_profile(request):
 def watch_my_dog(request):
     video_files=UploadVideo.objects.all().filter(user_id=request.user)
     video_path=''
+
     for i in video_files:
         video_path=i.video
+        filename, file_extension = os.path.splitext(str(video_path))
+        json_emotion_content_path='/media/'+filename+'_emotion.json';
+        json_detection_content_path='/media/'+filename+'_detection.json';
+        json_detection_dog_content_path='/media/'+filename+'_result.json';
+    # with open(json_emotion_content_path) as f:
+    #     json_emotion_content = f
 
-    return render(request, 'users/watch_my_dog.html', {'video_path':video_path})
+    return render(request, 'users/watch_my_dog.html', {'video_path':video_path,'emotion_data':json_emotion_content_path,'detection_data':json_detection_content_path,'dog_result_data':json_detection_dog_content_path})
     # data={}
     # data['deleted']=False
     # if request.method == 'POST':

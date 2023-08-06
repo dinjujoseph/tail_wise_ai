@@ -52,6 +52,7 @@
 
       <script type="text/javascript"></script>
 <script type="text/javascript">
+
          $(document).on("click", ".edit_btn", function(e){
     // console.log($(this).data('id'));
     var profile_id=$(this).data('id');
@@ -283,22 +284,133 @@ $.ajax({
       <div id='alert_suceess' class="alert alert-success" role="alert" style="display:none;">
   This is a success alert—check it out!
 </div>
-      <div class="text-center mt-3 mt-sm-3">
+<div style="margin-top: 20px;"><i class="fas fa-frown fa-lg label_hide label_hide_frown"  style="float:right;display: none;"></i><i class="far fa-smile-beam fa-lg label_hide label_hide_smile"  style="float:right;display: none;"></i><i class="far fa-angry fa-lg label_hide label_hide_angry" style="float:right;display: none;"></i></div>
+   <!--   <div class="text-center mt-3 mt-sm-3">-->
                     {% if video_path %}
 				<div>
-					<video autoplay="autoplay" controls="controls" preload="preload">
+					<video id='myVideo' autoplay="autoplay" controls="controls" preload="preload">
 						<source src="{{ MEDIA_URL }}/media/{{ video_path }}" type="video/mp4"></source>
 					</video>
 				</div>
 			{% endif %}
-                     </div>
-                  </div>
+   <!--                  </div>-->
+   <!--               </div>-->
 
 
-         </div>
-      </div>
+   <!--      </div>-->
+   <!--   </div>-->
 
    </body>
 </html>
+<script>
+var emotion_data='';
+var detection_data='';
+var detection_data_dog='';
+$(document).ready(function(){
+    $.ajax({
+    url: "{{emotion_data}}",
+    type: 'GET',
+    cache: false,
+    success: function(result) {
+        emotion_data=result;
+        //  alert(jQuery.dataType);
+        if (result) {
 
+        }
+
+    }
+});
+    $.ajax({
+    url: "{{detection_data}}",
+    type: 'GET',
+    cache: false,
+    success: function(result) {
+        detection_data=result;
+        //  alert(jQuery.dataType);
+        if (result) {
+
+        }
+
+    }
+});
+   $.ajax({
+    url: "{{dog_result_data}}",
+    type: 'GET',
+    cache: false,
+    success: function(result) {
+        detection_data_dog=result;
+        //  alert(jQuery.dataType);
+        if (result) {
+
+        }
+
+    }
+});
+});
+// var products = "{{emotion_data}}"
+const video = document.getElementById('myVideo');
+const frameRate = 30; // Change this to the actual frame rate of your video (frames per second)
+function sendemail(frame){
+    console.log('Mail send called');
+     $.ajax({
+    url: "/send_mail_nofitication",
+    type: 'POST',
+    data:{csrfmiddlewaretoken: '{{ csrf_token }}','object_name':frame},
+    cache: false,
+    success: function(result) {
+        console.log('Mail sent');
+
+    }
+});
+
+}
+function getCurrentFrameAndTimeRecursive(videoElement) {
+
+  const currentTime = videoElement.currentTime;
+  const currentFrame = Math.floor(currentTime * frameRate);
+//   console.log('Current Frame:', currentFrame, 'Current Time:', currentTime);
+//     console.log(emotion_data[currentFrame]);
+    if(detection_data[currentFrame])
+    {
+        if(detection_data[currentFrame]=='knife')
+        {
+        console.log(detection_data[currentFrame]);
+        //Its knife it should send a email
+        sendemail(detection_data[currentFrame]);
+
+        }
+    }
+    if(detection_data_dog[currentFrame])
+    {
+    if(emotion_data[currentFrame])
+    {
+        console.log(emotion_data[currentFrame]);
+      $('.label_hide').hide();
+      if(emotion_data[currentFrame]=='angry')
+      {
+       $('.label_hide_frown').show();
+      }
+      if(emotion_data[currentFrame]=='sad')
+      {
+       $('.label_hide_angry').show();
+      }
+       if(emotion_data[currentFrame]=='happy' || emotion_data[currentFrame]=='pleased')
+      {
+       $('.label_hide_smile').show();
+      }
+    }
+    }
+    else
+    {
+     $('.label_hide').hide();
+    }
+  // Update every second (1000ms)
+  setTimeout(() => {
+    getCurrentFrameAndTimeRecursive(videoElement);
+  }, 1000);
+}
+
+// Start the recursive function
+getCurrentFrameAndTimeRecursive(video);
+</script>
 {% endblock content %}
