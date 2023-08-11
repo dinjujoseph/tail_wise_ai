@@ -34,14 +34,15 @@ body {
   color: #FFFFFF;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("https://i.pinimg.com/736x/5d/73/ea/5d73eaabb25e3805de1f8cdea7df4a42--tumblr-backgrounds-iphone-phone-wallpapers-iphone-wallaper-tumblr.jpg");
+  /*background-image: url("https://i.pinimg.com/736x/5d/73/ea/5d73eaabb25e3805de1f8cdea7df4a42--tumblr-backgrounds-iphone-phone-wallpapers-iphone-wallaper-tumblr.jpg");*/
+  background-image: url("/static/images/bg_image.jpg");
   overflow: hidden;
 }
 .box-form .left .overlay {
   padding: 30px;
   width: 100%;
   height: 100%;
-  background: #5961f9ad;
+  /*background: #5961f9ad;*/
   overflow: hidden;
   box-sizing: border-box;
 }

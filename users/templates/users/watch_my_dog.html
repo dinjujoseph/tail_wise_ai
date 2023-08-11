@@ -284,11 +284,11 @@ $.ajax({
       <div id='alert_suceess' class="alert alert-success" role="alert" style="display:none;">
   This is a success alert—check it out!
 </div>
-<div style="margin-top: 20px;"><i class="fas fa-frown fa-lg label_hide label_hide_frown"  style="float:right;display: none;"></i><i class="far fa-smile-beam fa-lg label_hide label_hide_smile"  style="float:right;display: none;"></i><i class="far fa-angry fa-lg label_hide label_hide_angry" style="float:right;display: none;"></i></div>
+<div style="margin-top: 20px;"><i class="fas fa-frown fa-lg label_hide label_hide_frown"  style="float:right;display: none;">Sad</i><i class="far fa-smile-beam fa-lg label_hide label_hide_smile"  style="float:right;display: none;">Happy</i><i class="far fa-angry fa-lg label_hide label_hide_angry" style="float:right;display: none;">Angry</i></div>
    <!--   <div class="text-center mt-3 mt-sm-3">-->
                     {% if video_path %}
 				<div>
-					<video id='myVideo' autoplay="autoplay" controls="controls" preload="preload">
+					<video id='myVideo' width="600" height="800" autoplay="autoplay" controls="controls" preload="preload">
 						<source src="{{ MEDIA_URL }}/media/{{ video_path }}" type="video/mp4"></source>
 					</video>
 				</div>
