@@ -205,17 +205,19 @@ def delete_dog_profile(request):
 def watch_my_dog(request):
     video_files=UploadVideo.objects.all().filter(user_id=request.user)
     video_path=''
-
+    json_emotion_content_path=False
+    json_collide_detection=False
+    json_detection_dog_content_path=False
     for i in video_files:
         video_path=i.video
         filename, file_extension = os.path.splitext(str(video_path))
         json_emotion_content_path='/media/'+filename+'_emotion.json';
-        json_detection_content_path='/media/'+filename+'_detection.json';
-        json_detection_dog_content_path='/media/'+filename+'_result.json';
+        json_detection_dog_content_path='/media/'+filename+'_detection.json';
+        json_collide_detection='/media/'+filename+'_result.json';
     # with open(json_emotion_content_path) as f:
     #     json_emotion_content = f
 
-    return render(request, 'users/watch_my_dog.html', {'video_path':video_path,'emotion_data':json_emotion_content_path,'detection_data':json_detection_content_path,'dog_result_data':json_detection_dog_content_path})
+    return render(request, 'users/watch_my_dog.html', {'video_path':video_path,'emotion_data':json_emotion_content_path,'detection_data':json_collide_detection,'dog_result_data':json_detection_dog_content_path})
     # data={}
     # data['deleted']=False
     # if request.method == 'POST':
@@ -290,6 +292,7 @@ def dog_profile(request):
             video_file=request.POST.get("video_file", "")
             #Check for video file
             if video_file:
+
                 video_files=UploadVideo.objects.all().filter(user_id=request.user)
 
                 for i in video_files:
@@ -308,9 +311,11 @@ def dog_profile(request):
                 # print(portfolio.id)
                 # print(portfolio.image)
                     portfolio.save()
+                    messages.success(request, 'Your video is updated successfully')
+                else:
+                    messages.success(request, 'Please choose a video')
 
 
-                messages.success(request, 'Your video is updated successfully')
 
                 return redirect(to='dog-profile')
 

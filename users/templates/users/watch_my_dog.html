@@ -370,6 +370,7 @@ function getCurrentFrameAndTimeRecursive(videoElement) {
   const currentFrame = Math.floor(currentTime * frameRate);
 //   console.log('Current Frame:', currentFrame, 'Current Time:', currentTime);
 //     console.log(emotion_data[currentFrame]);
+    // console.log(detection_data);
     if(detection_data[currentFrame])
     {
         if(detection_data[currentFrame]=='knife')
