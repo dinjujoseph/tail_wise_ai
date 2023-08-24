@@ -168,12 +168,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mailtotailwise@gmail.com'
-EMAIL_HOST_PASSWORD = 'hizzlryygfkegbqi'
+EMAIL_HOST_PASSWORD = 'givegooglegmailpasswordhere'
 EMAIL_PORT = '587'
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
-DOG_API_ENDPOINT='https://api.thedogapi.com/'
-DOG_API_KEY='live_X5qa9dWCHV7V4gk9O3PamI5XYy1owMUzhY69lddFscpQ8zNQnWEuLMlyTb6CQ6ae'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
