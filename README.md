@@ -11,10 +11,9 @@ Using the xception CNN model, the developed system predicts 80 dog breeds with a
 
 
 The dog breed detection datset is the Dog Breed Identification Kaggle dataset and can be downloaded from the following link :  
-
-https://www.kaggle.com/competitions/dog-breed-identification/data
-The dog emotion detection dataset is Dod emotion classifier dataset from Kaggle and can be downloaded from the following link:-
+https://www.kaggle.com/competitions/dog-breed-identification/data  
+The dog emotion detection dataset is Dod emotion classifier dataset from Kaggle and can be downloaded from the following link:  
 https://www.kaggle.com/datasets/danielshanbalico/dog-emotion
 
-The code for building the machine learning model can also be seen in folder in ‘ai_models’. 
+The code for building the machine learning model can also be seen in folder in ‘ai_models’.   
 The trained models file can be accessed from the  folder ‘trained_models’. 
