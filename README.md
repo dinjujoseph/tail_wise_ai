@@ -5,4 +5,5 @@ Using the xception CNN model, the developed system predicts 80 dog breeds with a
 
 
 ![alt text](https://i.ibb.co/cL12MvN/tailwise-screengrab.jpg)
-
+![alt text](https://i.ibb.co/kcQrKwx/tailw-sie-new1.jpg)
+![alt text](https://i.ibb.co/WPR1TbK/tailw-sie-add-new-Dog.jpg)
